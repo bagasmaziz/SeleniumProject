@@ -1,0 +1,65 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.options import Options
+import time
+
+
+# Konfigurasi headless mode
+options = webdriver.ChromeOptions()
+options.add_argument("--headless=new")
+
+# Inisialisasi WebDriver dengan headless mode
+driver = webdriver.Chrome(options=options)
+
+
+try:
+    #open browser
+    driver.get ("https://bookcart.azurewebsites.net/") 
+        
+    assert "Home" in driver.title 
+    print("Website opened successfully")
+
+    driver.implicitly_wait(10)
+        
+    driver.find_element (By.CSS_SELECTOR, '[mattooltip="Login"]').click() 
+        
+    #login
+    driver.find_element (By.CSS_SELECTOR, '[placeholder="Username"]').send_keys("bagas1")
+    driver.find_element (By.CSS_SELECTOR, '[placeholder="Password"]').send_keys("Bagas123")
+    driver.implicitly_wait(5)
+
+    driver.find_element (By.XPATH,'//button[span[@class="mdc-button__label"][text()="Login"]]').click() 
+    driver.implicitly_wait(5)
+    print("Login success")
+
+
+        
+    driver.find_element (By.XPATH, "//div[@class='d-flex justify-content-start card-deck-container mb-4 ng-star-inserted']/div[6]//span[@class='mdc-button__label']").click() 
+    driver.implicitly_wait(5)
+
+    print("success add to cart")
+
+    driver.find_element (By.CSS_SELECTOR,'button:nth-of-type(2) > .mat-icon').click() 
+    driver.implicitly_wait(5)
+
+    driver.find_element (By.CSS_SELECTOR,'.mdc-button.my-2 > .mdc-button__label').click() 
+    driver.implicitly_wait(5)
+
+    #Shipping Address
+    driver.find_element (By.CSS_SELECTOR, "[placeholder='Name']").send_keys("Bagas")
+    driver.find_element (By.CSS_SELECTOR, "[placeholder='Address Line 1']").send_keys("Jalan jakarta")
+    driver.find_element (By.CSS_SELECTOR, "[placeholder='Address Line 2']").send_keys("Halim p")
+    driver.find_element (By.CSS_SELECTOR, "[placeholder='Pincode']").send_keys("123456")
+    driver.find_element (By.CSS_SELECTOR, "[placeholder='State']").send_keys("Jakarta")
+    driver.implicitly_wait(5)
+    driver.find_element (By.CSS_SELECTOR,"[type='submit'] > .mdc-button__label").click() 
+    driver.implicitly_wait(20)
+
+
+    #assertion My Order
+    assert "My Order Details" in driver.title 
+    print("berhasil Checkout di browser")
+
+finally:
+    driver.quit()
